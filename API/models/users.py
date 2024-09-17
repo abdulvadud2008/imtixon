@@ -1,27 +1,26 @@
 from generale.models import BaseModel
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import date, datetime
+from sqlalchemy import Column, String, Boolean, DateTime, Date, UniqueConstraint
+from sqlalchemy.orm import relationship
+from datetime import datetime
 from models.post import Post, PostComment, PostFavorites
-
 
 class UserTable(BaseModel):
     __tablename__ = "users_user"
 
-    username: Mapped[str] = mapped_column(unique=True)
-    password: Mapped[str]
-    first_name: Mapped[str]
-    last_name: Mapped[str]
-    email: Mapped[str]
-    phone: Mapped[str]
-    role: Mapped[str]
-    gender: Mapped[str]
-    date_of_birth: Mapped[date]
-    date_joined: Mapped[date] = mapped_column(default=datetime.now)
-    is_superuser: Mapped[bool] = mapped_column( default=False)
-    is_staff: Mapped[bool] = mapped_column(default=False)
-    is_active: Mapped[bool] = mapped_column(default=True)
+    username = Column(String, unique=True)
+    password = Column(String)
+    first_name = Column(String)
+    last_name = Column(String)
+    email = Column(String)
+    phone = Column(String)
+    role = Column(String)
+    gender = Column(String)
+    date_of_birth = Column(Date)
+    date_joined = Column(DateTime, default=datetime.now)
+    is_superuser = Column(Boolean, default=False)
+    is_staff = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
 
-
-    posts: Mapped[list["Post"]] = relationship(back_populates="user")
-    comments: Mapped[list["PostComment"]] = relationship(back_populates="user")
-    favorites: Mapped[list["PostFavorites"]] = relationship(back_populates="user")
+    posts = relationship("Post", back_populates="user")
+    comments = relationship("PostComment", back_populates="user")
+    favorites = relationship("PostFavorites", back_populates="user")

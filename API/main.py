@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Depends
-from router import auth, post, comment, favorite, files
+from router.news import comment, favorite, files, post
+from fastapi import FastAPI
+from router import auth
 
 
 app = FastAPI(title="NEWS API")

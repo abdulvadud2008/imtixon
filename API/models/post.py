@@ -1,50 +1,50 @@
-from sqlalchemy import String, Text, ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import Column, String, Text, ForeignKey, Integer
+from sqlalchemy.orm import relationship
 from generale.models import BaseModel
 
 class PostFiles(BaseModel):
     __tablename__ = 'news_postfiles'
-    file: Mapped[str] = mapped_column(String)
-    post_id: Mapped[int] = mapped_column(ForeignKey('news_post.id'))
+    file = Column(String)
+    post_id = Column(Integer, ForeignKey('news_post.id'))
 
-    post: Mapped["Post"] = relationship(back_populates="files")
+    post = relationship("Post", back_populates="files")
 
 
 class PostCategory(BaseModel):
     __tablename__ = 'news_postcategory'
-    title: Mapped[str] = mapped_column(String(25))
+    title = Column(String(25))
 
-    posts: Mapped["Post"] = relationship(back_populates="category")
+    posts = relationship("Post", back_populates="category")
+
 
 class Post(BaseModel):
     __tablename__ = 'news_post'
-    title: Mapped[str] = mapped_column(String(64))
-    description: Mapped[str] = mapped_column(Text)
-    category_id: Mapped[int] = mapped_column(ForeignKey('news_postcategory.id'), nullable=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users_user.id'), nullable=True)
+    title = Column(String(64))
+    description = Column(Text)
+    category_id = Column(Integer, ForeignKey('news_postcategory.id'), nullable=True)
+    user_id = Column(Integer, ForeignKey('users_user.id'), nullable=True)
 
-    files: Mapped[list["PostFiles"]] = relationship(back_populates="post", lazy="joined")
-    category: Mapped["PostCategory"] = relationship(back_populates="posts")
-    user: Mapped["UserTable"] = relationship(back_populates="posts")
-    comments: Mapped[list["PostComment"]] = relationship(back_populates="post")
-    favorites: Mapped[list["PostFavorites"]] = relationship(back_populates="post")
-
+    files = relationship("PostFiles", back_populates="post", lazy="joined", cascade="all, delete-orphan")
+    category = relationship("PostCategory", back_populates="posts")
+    user = relationship("UserTable", back_populates="posts")
+    comments = relationship("PostComment", back_populates="post", cascade="all, delete-orphan")
+    favorites = relationship("PostFavorites", back_populates="post", cascade="all, delete-orphan")
 
 
 class PostComment(BaseModel):
     __tablename__ = 'news_postcomment'
-    user_id: Mapped[int] = mapped_column(ForeignKey('users_user.id'))
-    post_id: Mapped[int] = mapped_column(ForeignKey('news_post.id'))  
-    text: Mapped[str] = mapped_column(String(48))
+    user_id = Column(Integer, ForeignKey('users_user.id'))
+    post_id = Column(Integer, ForeignKey('news_post.id'))  
+    text = Column(String(48))
 
-    user: Mapped["UserTable"] = relationship(back_populates="comments")
-    post: Mapped["Post"] = relationship(back_populates="comments")
+    user = relationship("UserTable", back_populates="comments")
+    post = relationship("Post", back_populates="comments")
 
 
 class PostFavorites(BaseModel):
     __tablename__ = 'news_postfavorites'
-    user_id: Mapped[int] = mapped_column(ForeignKey('users_user.id'))
-    post_id: Mapped[int] = mapped_column(ForeignKey('news_post.id'))
+    user_id = Column(Integer, ForeignKey('users_user.id'))
+    post_id = Column(Integer, ForeignKey('news_post.id'))
 
-    user: Mapped["UserTable"] = relationship(back_populates="favorites")
-    post: Mapped["Post"] = relationship(back_populates="favorites") 
+    user = relationship("UserTable", back_populates="favorites")
+    post = relationship("Post", back_populates="favorites")
