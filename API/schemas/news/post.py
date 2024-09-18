@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from schemas.users import UserSchema
-from API.schemas.news.comment import CommentResponseSchema
-from API.schemas.news.favorite import FavoritesResponseSchema
+from schemas.news.comment import CommentResponseSchema
+from schemas.news.favorite import FavoritesResponseSchema
 
 class PostCreateSchema(BaseModel):
     title: str = Field(max_length=64)
