@@ -13,9 +13,15 @@ class PostCreateSchema(BaseModel):
 class FileSchema(BaseModel):
     file: str
 
+    class Config:
+        from_attributes = True
+
 
 class CategorySchema(BaseModel):
     title: str
+
+    class Config:
+        from_attributes = True  # Enable from_orm usage
 
 
 class PostListSchema(BaseModel):
@@ -35,7 +41,10 @@ class PostListSchema(BaseModel):
             category=CategorySchema.from_orm(post.category),
             main_image=main_image
         )
-    
+
+    class Config:
+        from_attributes = True  # Enable from_orm usage
+
 
 class DetailSchema(BaseModel):
     id: int
@@ -46,3 +55,6 @@ class DetailSchema(BaseModel):
     files: Optional[List[FileSchema]] = None
     comments: Optional[List[CommentResponseSchema]] = None
     favorites: Optional[List[FavoritesResponseSchema]] = None
+
+    class Config:
+        from_attributes = True  # Enable from_orm usage

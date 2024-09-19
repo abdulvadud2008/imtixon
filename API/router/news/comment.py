@@ -51,7 +51,7 @@ def delete_comment(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment not found!")
     
     if comment.user_id != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot delete comment, because it was created by another user.")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Fikrni oʻchirib boʻlmaydi, chunki u boshqa foydalanuvchi tomonidan yaratilgan.")
 
     session.delete(comment)
     session.commit()

@@ -39,7 +39,7 @@ async def get_post_detail(post_id: int, session: Session = Depends(get_session))
             joinedload(Post.favorites)))
     post = result.unique().scalar_one_or_none()
 
-    if not post: raise HTTPException(status_code=404, detail="Post not found")
+    if not post: raise HTTPException(status_code=404, detail="not found")
 
     return post
 
@@ -57,7 +57,7 @@ def create_post(data: PostCreateSchema, user: UserTable = Depends(user_handler.e
         session.refresh(post)
         return {"message": "Post created!"}
     except IntegrityError as e:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="An error occurred")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="qandaylik hatolik chiqdi kodini tekshir")
 
 
 @router.put("/posts/{post_id}", status_code=status.HTTP_200_OK)
@@ -65,7 +65,7 @@ def update_post(post_id: int, data: PostCreateSchema, user: UserTable = Depends(
     post = session.query(Post).filter(Post.id == post_id, Post.user_id == user.id).first()
     
     if not post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found or access denied.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="")
     
     # Update post fields
     post.title = data.title
@@ -78,7 +78,7 @@ def update_post(post_id: int, data: PostCreateSchema, user: UserTable = Depends(
         return {"message": "Post updated !"}
     except IntegrityError:
         session.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="An error occurred during the update.")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Yangilash vaqtida xatolik yuz berdi.")
 
 
 
@@ -93,7 +93,7 @@ def delete_post(post_id: int, user: UserTable = Depends(user_handler.employee), 
     
     # Check if the user is authorized to delete the post
     if post.user_id != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You do not have permission to delete this post.")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sizda bu postni o‘chirishga ruxsatingiz yo‘q.")
     
     # Delete the post
     session.delete(post)

@@ -24,7 +24,7 @@ def create_favorite(
 
     favorite = session.query(PostFavorites).filter(PostFavorites.post_id == post_id, PostFavorites.user_id == user.id).first()
     if favorite:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Post is already in favorites.")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Post allaqachon sevimlilar ro‘yxatiga kiritilgan.")
 
     new_favorite = PostFavorites(post_id=post_id, user_id=user.id)
     
@@ -32,7 +32,7 @@ def create_favorite(
     session.commit()
     session.refresh(new_favorite)
     
-    return {"message": "Post added to favorites!"}
+    return {"message": "Post sevimlilarga qo'shildi!"}
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -44,7 +44,7 @@ def delete_favorite(
     favorite = session.query(PostFavorites).filter(PostFavorites.post_id == post_id, PostFavorites.user_id == user.id).first()
 
     if not favorite:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Favorite not found!")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sevimli topilmadi!")
 
     session.delete(favorite)
     session.commit()
